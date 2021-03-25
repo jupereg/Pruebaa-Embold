@@ -1,0 +1,6 @@
+<?xml version='1.0' encoding='UTF-8'?>
+<dataset>
+  <sucursal ID_SUCURSAL="BrZa01" DIRECCION="Breton 4" CIUDAD="Zaragoza" CODIGO_POSTAL="50009"/>
+  <sucursal ID_SUCURSAL="MZZa01" DIRECCION="Maria Zambrano 13" CIUDAD="Zaragoza" CODIGO_POSTAL="50080"/>
+  <sucursal ID_SUCURSAL="RHHu01" DIRECCION="C/ Ramon Acin 3" CIUDAD="Huesca" CODIGO_POSTAL="22002"/>
+</dataset>
