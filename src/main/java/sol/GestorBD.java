@@ -340,7 +340,7 @@ import java.util.ArrayList;
 					else
 						ps3.setDouble(7, arg0.getSalario());
 					
-					ps3.setString(8,arg0.getSucursal().getId() );
+					ps3.setString(8,sucursal.getId() );
 					
 					ps3.executeUpdate();
 					
