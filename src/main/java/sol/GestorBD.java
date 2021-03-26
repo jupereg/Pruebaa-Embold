@@ -9,7 +9,8 @@ package sol;
 	import java.sql.PreparedStatement;
 	import java.sql.ResultSet;
 	import java.sql.SQLException;
-	import java.util.ArrayList;
+import java.sql.Types;
+import java.util.ArrayList;
 	import java.util.Calendar;
 	import java.util.GregorianCalendar;
 	import java.util.List;
@@ -88,6 +89,7 @@ package sol;
 			boolean b;
 			try {
 				con=DriverManager.getConnection(URL, USR, PWD);
+				con.setAutoCommit(false);
 				String s1="Delete from cliente where id_cliente=?";
 				String s2="Delete from visita where id_cliente=?";
 				PreparedStatement ps1=con.prepareStatement(s1);
@@ -107,6 +109,13 @@ package sol;
 			}
 			catch(SQLException e) {
 				e.printStackTrace();
+				try {
+					if(con!=null)
+						con.rollback();
+				}
+				catch(SQLException ex) {
+					ex.printStackTrace();
+				}
 				throw new ExcepcionDeAplicacion(e);
 			}
 			finally {
@@ -290,6 +299,7 @@ package sol;
 			try {
 				con=DriverManager.getConnection(URL, USR, PWD);
 				con.setAutoCommit(false);
+				
 				if(this.getEmpleado(arg0.getId())==null) { 
 					String sql="SELECT * FROM sucursal WHERE id_sucursal=?";					
 					PreparedStatement ps=con.prepareStatement(sql);
@@ -304,6 +314,8 @@ package sol;
 						ps2.setString(4, sucursal.getCP());	
 						ps2.executeUpdate();
 						
+						rs.close();
+						ps.close();
 						ps2.close();
 					}
 					
@@ -313,16 +325,40 @@ package sol;
 					ps3.setString(2, arg0.getNombre());
 					ps3.setString(3, arg0.getApellidos());
 					ps3.setString(4, arg0.getTrabajo());
-					ps3.setString(5, Character.toString(arg0.getSexo()));
-					ps3.setDouble(6, arg0.getSalario());
+					if(arg0.getSexo()==null)
+						ps3.setNull(5, Types.BOOLEAN);
+					else
+						ps3.setString(5, Character.toString(arg0.getSexo()));
 					Calendar fechaN=arg0.getFechaNacimiento();
-					ps3.setDate(7, fechaN);
+					if(fechaN==null)
+						ps3.setDate(6, null);
+					else
+						ps3.setDate(6, new java.sql.Date(fechaN.getTimeInMillis()));
+						
+					if(arg0.getSalario()==null)
+						ps3.setNull(7, Types.DOUBLE);
+					else
+						ps3.setDouble(7, arg0.getSalario());
 					
-					con.commit();
+					Sucursal s=arg0.getSucursal();
+					ps3.setString(8,s.getId() );
+					
+					ps3.executeUpdate();
+					
+					ps3.close();
+					con.commit();//cierre de transacción
 				}
 			}
 			catch(SQLException e) {
 				e.printStackTrace();	
+				e.printStackTrace();
+				try {
+					if(con!=null)
+						con.rollback();
+				}
+				catch(SQLException ex) {
+					ex.printStackTrace();
+				}
 				throw new ExcepcionDeAplicacion(e);
 			}
 			finally {
