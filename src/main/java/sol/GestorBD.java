@@ -314,10 +314,10 @@ import java.util.ArrayList;
 						ps2.setString(4, sucursal.getCP());	
 						ps2.executeUpdate();
 						
-						rs.close();
-						ps.close();
-						ps2.close();
+						ps2.close();						
 					}
+					rs.close();
+					ps.close();					
 					
 					String sql3="INSERT INTO empleado VALUES(?,?,?,?,?,?,?,?)";
 					PreparedStatement ps3=con.prepareStatement(sql3);
@@ -340,8 +340,7 @@ import java.util.ArrayList;
 					else
 						ps3.setDouble(7, arg0.getSalario());
 					
-					Sucursal s=arg0.getSucursal();
-					ps3.setString(8,s.getId() );
+					ps3.setString(8,arg0.getSucursal().getId() );
 					
 					ps3.executeUpdate();
 					
@@ -376,7 +375,51 @@ import java.util.ArrayList;
 		@Override
 		public int eliminarEmpleados(List<String> arg0) throws ExcepcionDeAplicacion {
 			// TODO Auto-generated method stub
-			return 0;
+			Connection con=null;
+			int resultado=0;
+			try {
+				con=DriverManager.getConnection(URL, USR, PWD);
+				con.setAutoCommit(false);
+				String s1="DELETE FROM visita WHERE id_empleado=?";
+				String s2="DELETE FROM captacion WHERE id_empleado=?";
+				String s3="DELETE FROM empleado WHERE id_empleado=?";
+				PreparedStatement ps1=con.prepareStatement(s1);
+				PreparedStatement ps2=con.prepareStatement(s2);
+				PreparedStatement ps3=con.prepareStatement(s3);
+				for(int i=0;i<arg0.size();i++) {
+					ps1.setString(1, arg0.get(i));
+					ps1.executeUpdate();
+					ps2.setString(1, arg0.get(i));
+					ps2.executeUpdate();
+					ps3.setString(1, arg0.get(i));
+					
+					resultado=resultado + ps3.executeUpdate();
+				}
+				ps1.close();ps2.close();ps3.close();
+				con.commit();
+			}
+			catch(SQLException e) {
+				e.printStackTrace();
+				try {
+					if(con!=null)
+						con.rollback();
+				}
+				catch(SQLException ex) {
+					ex.printStackTrace();
+				}
+				throw new ExcepcionDeAplicacion(e);
+			}
+			finally {
+				try {
+					if(con!=null)
+						con.close();
+				}
+				catch(SQLException e) {
+					e.printStackTrace();
+					throw new ExcepcionDeAplicacion(e);
+				}
+			}
+			return resultado;
 		}
 		@Override
 		public int incrementarSueldoUpdatableResultSet(float arg0) throws ExcepcionDeAplicacion {
