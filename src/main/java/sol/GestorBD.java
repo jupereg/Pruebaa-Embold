@@ -9,6 +9,7 @@ package sol;
 	import java.sql.PreparedStatement;
 	import java.sql.ResultSet;
 	import java.sql.SQLException;
+import java.sql.Statement;
 import java.sql.Types;
 import java.util.ArrayList;
 	import java.util.Calendar;
@@ -106,6 +107,7 @@ import java.util.ArrayList;
 				
 				ps1.close();
 				ps2.close();
+				con.commit();
 			}
 			catch(SQLException e) {
 				e.printStackTrace();
@@ -262,6 +264,7 @@ import java.util.ArrayList;
 		@Override
 		public int incrementarSueldo(float arg0) throws ExcepcionDeAplicacion {
 			// TODO Auto-generated method stub
+			long l1=System.currentTimeMillis();//tiempo inicial
 			Connection con=null;
 			int resultado=0;
 			try {
@@ -287,6 +290,8 @@ import java.util.ArrayList;
 					throw new ExcepcionDeAplicacion(e);
 				}
 			}
+			long l2=System.currentTimeMillis();//tiempo inicial
+			System.out.println("Tiempo tardado incrementarSueldo(float)"+(l2-l1));
 			return resultado;
 		}
 		
@@ -295,23 +300,22 @@ import java.util.ArrayList;
 		public void aniadirEmpleado(Empleado arg0) throws ExcepcionDeAplicacion {
 			// TODO Auto-generated method stub
 			Connection con=null;
-			Sucursal sucursal=arg0.getSucursal();
 			try {
 				con=DriverManager.getConnection(URL, USR, PWD);
 				con.setAutoCommit(false);
 				
-				if(this.getEmpleado(arg0.getId())==null) { 
+				if(this.getEmpleado(arg0.getId())==null) { //si no está en la BD
 					String sql="SELECT * FROM sucursal WHERE id_sucursal=?";					
 					PreparedStatement ps=con.prepareStatement(sql);
-					ps.setString(1, sql);
+					ps.setString(1, arg0.getSucursal().getId());
 					ResultSet rs=ps.executeQuery();
 					if(!rs.next()) {
 						String sql2="INSERT INTO sucursal VALUES(?,?,?,?)";
 						PreparedStatement ps2=con.prepareStatement(sql2);
-						ps2.setString(1, sucursal.getId());	
-						ps2.setString(2, sucursal.getDireccion());		
-						ps2.setString(3, sucursal.getCiudad());		
-						ps2.setString(4, sucursal.getCP());	
+						ps2.setString(1, arg0.getSucursal().getId());	
+						ps2.setString(2, arg0.getSucursal().getDireccion());		
+						ps2.setString(3, arg0.getSucursal().getCiudad());		
+						ps2.setString(4, arg0.getSucursal().getCP());	
 						ps2.executeUpdate();
 						
 						ps2.close();						
@@ -325,6 +329,7 @@ import java.util.ArrayList;
 					ps3.setString(2, arg0.getNombre());
 					ps3.setString(3, arg0.getApellidos());
 					ps3.setString(4, arg0.getTrabajo());
+					//comprobar nulos para tipos primitivos
 					if(arg0.getSexo()==null)
 						ps3.setNull(5, Types.BOOLEAN);
 					else
@@ -340,7 +345,7 @@ import java.util.ArrayList;
 					else
 						ps3.setDouble(7, arg0.getSalario());
 					
-					ps3.setString(8,sucursal.getId() );
+					ps3.setString(8,arg0.getSucursal().getId() );
 					
 					ps3.executeUpdate();
 					
@@ -393,7 +398,7 @@ import java.util.ArrayList;
 					ps2.executeUpdate();
 					ps3.setString(1, arg0.get(i));
 					
-					resultado=resultado + ps3.executeUpdate();
+					resultado=resultado + ps3.executeUpdate();//vamos almacenando en resultado la cantidad de filas borradas de empleado
 				}
 				ps1.close();ps2.close();ps3.close();
 				con.commit();
@@ -424,8 +429,58 @@ import java.util.ArrayList;
 		@Override
 		public int incrementarSueldoUpdatableResultSet(float arg0) throws ExcepcionDeAplicacion {
 			// TODO Auto-generated method stub
-			return 0;
+			long l1=System.currentTimeMillis();//tiempo inicial
+			Connection con=null;
+			int resultado=0;
+			try {
+				con=DriverManager.getConnection(URL, USR, PWD);
+				con.setAutoCommit(false);
+				Statement st=con.createStatement(ResultSet.TYPE_SCROLL_INSENSITIVE, ResultSet.CONCUR_UPDATABLE);
+				ResultSet rs=st.executeQuery("SELECT * FROM empleado");
+				while(rs.next()) {
+					double sueldo=rs.getDouble(7);
+					if(rs.wasNull())
+						rs.updateNull(7);
+					else
+						rs.updateDouble(7, sueldo+sueldo*arg0/100);
+					
+					rs.updateRow();
+					resultado++;
+				}
+								
+				rs.close();
+				st.close();
+				con.commit();
+			}
+			catch(SQLException e) {
+				e.printStackTrace();
+				try {
+					if(con!=null)
+						con.rollback();
+				}
+				catch(SQLException ex) {
+					ex.printStackTrace();
+				}
+				throw new ExcepcionDeAplicacion(e);
+			}
+			finally {
+				try {
+					if(con!=null)
+						con.close();
+				}
+				catch(SQLException e) {
+					e.printStackTrace();
+					throw new ExcepcionDeAplicacion(e);
+				}
+			}
+			long l2=System.currentTimeMillis();//tiempo final
+			System.out.println("Tiempo tardado incrementarSueldoUpdatableResultSet(float):"+(l2-l1));
+			return resultado;
+			
 		}
+		//Ejecutando los 2 métodos de incrementar, en incrementarSueldoUpdatableResultSet(float)
+		//se reduce notablemente el tiempo con respecto a incrementarSueldo(float)
+		//Para comprobarlo he creado una nueva clase principal con un método main
 
 }
 
