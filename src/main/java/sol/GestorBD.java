@@ -13,7 +13,6 @@ import java.sql.Statement;
 import java.sql.Types;
 import java.util.ArrayList;
 	import java.util.Calendar;
-	import java.util.GregorianCalendar;
 	import java.util.List;
 	import java.util.Properties;
 
@@ -87,7 +86,7 @@ import java.util.ArrayList;
 		public boolean eliminarCliente(String arg0) throws ExcepcionDeAplicacion {
 			// TODO Auto-generated method stub
 			Connection con=null;
-			boolean b;
+			boolean b=false;
 			try {
 				con=DriverManager.getConnection(URL, USR, PWD);
 				con.setAutoCommit(false);
@@ -101,7 +100,6 @@ import java.util.ArrayList;
 				ps2.executeUpdate();
 				int cantidad=ps1.executeUpdate();//Con comprobar solo en la tabla cliente sabremos si se ha hecho algún cambio
 				
-				b=false;
 				if(cantidad!=0)
 					b=true;
 				
@@ -117,6 +115,7 @@ import java.util.ArrayList;
 				}
 				catch(SQLException ex) {
 					ex.printStackTrace();
+					throw new ExcepcionDeAplicacion(e);
 				}
 				throw new ExcepcionDeAplicacion(e);
 			}
@@ -144,36 +143,31 @@ import java.util.ArrayList;
 				con=DriverManager.getConnection(URL, USR, PWD);
 				String s1="SELECT * FROM empleado WHERE id_empleado=?";
 				String s2="SELECT s.* FROM sucursal s JOIN empleado e ON s.id_sucursal=e.sucursal WHERE e.id_empleado=?";
-				PreparedStatement ps1=con.prepareStatement(s1);//consulta ya precompilada
-				PreparedStatement ps2=con.prepareStatement(s2);//consulta ya precompilada
-				ps1.setString(1, arg0);//primera componente ? de la primera consulta
-				ps2.setString(1, arg0);//primera componente ? de la segunda consulta
-				ResultSet rs1=ps1.executeQuery();//ejecutamos y almacenamos la consulta
-				ResultSet rs2=ps2.executeQuery();//ejecutamos y almacenamos la consulta						
+				PreparedStatement ps1=con.prepareStatement(s1);
+				PreparedStatement ps2=con.prepareStatement(s2);
+				ps1.setString(1, arg0);
+				ps2.setString(1, arg0);
+				ResultSet rs1=ps1.executeQuery();
+				ResultSet rs2=ps2.executeQuery();					
 				
 				if(rs2.next()) {
 					sucursal=new Sucursal(rs2.getString(1),rs2.getString(2),rs2.getString(3),rs2.getString(4));
 				}
 				if(rs1.next()) {
-					//hay un fallo en el javaDoc, calendar en la BD es la posicion 6, pero en el constructor la 7
-					char c=rs1.getString(5).charAt(0);//obtenemos el primer caracter de la String. Se podría
-														//hacer en la misma línea de creación de empleado
-//ISMA					//Comprobar primero si es o no null. por ej -> char c=(rs1.getString(5)==null)? null:rs1.charAt(0)
+					String sexo=rs1.getString(5);
+					char sexoChar=(sexo==null)? null:sexo.charAt(0);
 					
 					Double salario=rs1.getDouble(7);
 					if(rs1.wasNull()) salario=null;
-					
-//ISMA				Calendar cal=new GregorianCalendar(); //Convertir el date a calendar.por ejemplo -> Date d = rs.getDate(6);
-																									//Calendar f = Calendar.getInstance();
-																									//f.setTime(d);
-					//cal.setTime(rs1.getDate(6));		
+							
 					Date d=rs1.getDate(6);
 					Calendar cal=Calendar.getInstance();
-					cal.setTime(d);
-					
-					empleado=new Empleado(rs1.getString(1),rs1.getString(2),rs1.getString(3),rs1.getString(4),c,salario,cal,sucursal);
+					if(d!=null) 					
+						cal.setTime(d);
+					else
+						cal=null;//Está bien??
+					empleado=new Empleado(rs1.getString(1),rs1.getString(2),rs1.getString(3),rs1.getString(4),sexoChar,salario,cal,sucursal);
 				}
-				//cerramos conexiones
 				rs1.close();rs2.close();
 				ps1.close();ps2.close();
 			}
@@ -205,12 +199,12 @@ import java.util.ArrayList;
 				con=DriverManager.getConnection(URL, USR, PWD);
 				String s1="SELECT * FROM finca WHERE id_finca=?";
 				String s2="SELECT P.* FROM PROPIETARIO AS P JOIN FINCA AS F ON P.ID_PROPIETARIO=F.PROPIETARIO WHERE id_finca =?";	
-				PreparedStatement pstm = con.prepareStatement(s1);//consulta ya precompilada
-				PreparedStatement pstm2=con.prepareStatement(s2);//consulta ya precompilada
-				pstm.setString(1, arg0);//primera componente ? de la primera consulta
-				pstm2.setString(1, arg0);//primera componente ? de la segunda consulta
-				ResultSet rs1=pstm.executeQuery();//ejecutamos y almacenamos la consulta
-				ResultSet rs2=pstm2.executeQuery();	//ejecutamos y almacenamos la consulta
+				PreparedStatement pstm = con.prepareStatement(s1);
+				PreparedStatement pstm2=con.prepareStatement(s2);
+				pstm.setString(1, arg0);
+				pstm2.setString(1, arg0);
+				ResultSet rs1=pstm.executeQuery();
+				ResultSet rs2=pstm2.executeQuery();	
 				
 				//Boolean ascB=(asc==null)? null: asc.equalsIgnoreCase("Si")
 				
@@ -218,17 +212,10 @@ import java.util.ArrayList;
 					prop=new Propietario(rs2.getString(1),rs2.getString(2),rs2.getString(3),rs2.getString(4),rs2.getString(5));
 				}			
 				if(rs1.next()) {
-					  String s="si";
-			          boolean ascensor=true;
-//ISMA			      if(s.compareTo(rs1.getString(9))!=0)//Mejor usar equalsIgnoreCase ->(!rs1.getString(9).equalsIgnoreCase(s))
-//			          {
-//			        	  ascensor=false;
-//			          }
-			          if(!rs1.getString(9).equalsIgnoreCase(s))
-			        	  ascensor=false;
-			          
-//			         Boolean ascensor=rs1.getBoolean(9);
-//			         if(rs1.wasNull()) ascensor=null; No funciona, en la BD original es "si" o "no"
+			         boolean hayAscensor;
+			         String ascensor=rs1.getString(9);
+			         hayAscensor=(ascensor==null)? null:ascensor.equalsIgnoreCase("si");
+			         			          
 			         Integer habitaciones = rs1.getInt(6); 
 				  	 if (rs1.wasNull()) habitaciones=null;
 			         Integer banios = rs1.getInt(7);
@@ -236,10 +223,9 @@ import java.util.ArrayList;
 			  		 Double alquiler = rs1.getDouble(10); 
 			  		 if (rs1.wasNull()) alquiler=null;
 			  		 
-			  		 finca=new Finca(rs1.getString(1),rs1.getString(2),rs1.getString(3),rs1.getString(4),rs1.getString(5),habitaciones,banios,rs1.getString(8),ascensor,prop,alquiler);
+			  		 finca=new Finca(rs1.getString(1),rs1.getString(2),rs1.getString(3),rs1.getString(4),rs1.getString(5),habitaciones,banios,rs1.getString(8),hayAscensor,prop,alquiler);
 			  		
 				}
-				//cerramos las conexiones
 				rs1.close();rs2.close();
 				pstm.close();pstm2.close();
 			}
@@ -290,7 +276,7 @@ import java.util.ArrayList;
 					throw new ExcepcionDeAplicacion(e);
 				}
 			}
-			long l2=System.currentTimeMillis();//tiempo inicial
+			long l2=System.currentTimeMillis();//tiempo final
 			System.out.println("Tiempo tardado incrementarSueldo(float)"+(l2-l1));
 			return resultado;
 		}
@@ -306,10 +292,10 @@ import java.util.ArrayList;
 				
 				if(this.getEmpleado(arg0.getId())==null) { //si no está en la BD
 					String sql="SELECT * FROM sucursal WHERE id_sucursal=?";					
-					PreparedStatement ps=con.prepareStatement(sql);
-					ps.setString(1, arg0.getSucursal().getId());
-					ResultSet rs=ps.executeQuery();
-					if(!rs.next()) {
+//					PreparedStatement ps=con.prepareStatement(sql);
+//					ps.setString(1, arg0.getSucursal().getId());
+//					ResultSet rs=ps.executeQuery();
+					if(!existe(con,sql,arg0.getSucursal().getId())) {//si no existe tampoco la sucursal
 						String sql2="INSERT INTO sucursal VALUES(?,?,?,?)";
 						PreparedStatement ps2=con.prepareStatement(sql2);
 						ps2.setString(1, arg0.getSucursal().getId());	
@@ -320,8 +306,8 @@ import java.util.ArrayList;
 						
 						ps2.close();						
 					}
-					rs.close();
-					ps.close();					
+//					rs.close();
+//					ps.close();					
 					
 					String sql3="INSERT INTO empleado VALUES(?,?,?,?,?,?,?,?)";
 					PreparedStatement ps3=con.prepareStatement(sql3);
@@ -330,10 +316,12 @@ import java.util.ArrayList;
 					ps3.setString(3, arg0.getApellidos());
 					ps3.setString(4, arg0.getTrabajo());
 					//comprobar nulos para tipos primitivos
-					if(arg0.getSexo()==null)
+					Character sexo=arg0.getSexo();//para acceder 2 veces mejor lo almacenamos en una variable
+					if(sexo==null)
 						ps3.setNull(5, Types.BOOLEAN);
 					else
-						ps3.setString(5, Character.toString(arg0.getSexo()));
+						ps3.setString(5, Character.toString(sexo));
+					
 					Calendar fechaN=arg0.getFechaNacimiento();
 					if(fechaN==null)
 						ps3.setDate(6, null);
@@ -355,13 +343,13 @@ import java.util.ArrayList;
 			}
 			catch(SQLException e) {
 				e.printStackTrace();	
-				e.printStackTrace();
 				try {
 					if(con!=null)
 						con.rollback();
 				}
 				catch(SQLException ex) {
 					ex.printStackTrace();
+					throw new ExcepcionDeAplicacion(ex);
 				}
 				throw new ExcepcionDeAplicacion(e);
 			}
@@ -411,6 +399,7 @@ import java.util.ArrayList;
 				}
 				catch(SQLException ex) {
 					ex.printStackTrace();
+					throw new ExcepcionDeAplicacion(ex);
 				}
 				throw new ExcepcionDeAplicacion(e);
 			}
@@ -460,6 +449,7 @@ import java.util.ArrayList;
 				}
 				catch(SQLException ex) {
 					ex.printStackTrace();
+					throw new ExcepcionDeAplicacion(ex);
 				}
 				throw new ExcepcionDeAplicacion(e);
 			}
@@ -477,6 +467,24 @@ import java.util.ArrayList;
 			System.out.println("Tiempo tardado incrementarSueldoUpdatableResultSet(float):"+(l2-l1));
 			return resultado;
 			
+		}
+		public boolean existe(Connection con,String sql,String valorId) throws ExcepcionDeAplicacion{
+			boolean existe=false;
+			try {
+				PreparedStatement ps=con.prepareStatement(sql);
+				ps.setString(1, valorId);;
+				ResultSet rs=ps.executeQuery();
+				
+				existe=rs.next();
+				
+				rs.close();
+				ps.close();				
+			}
+			catch(SQLException ex) {
+				ex.printStackTrace();
+				throw new ExcepcionDeAplicacion("Error al borrar el cliente",ex);
+			}
+			return existe;
 		}
 		//Ejecutando los 2 métodos de incrementar, en incrementarSueldoUpdatableResultSet(float)
 		//se reduce notablemente el tiempo con respecto a incrementarSueldo(float)
