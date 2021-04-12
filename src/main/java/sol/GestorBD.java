@@ -327,11 +327,12 @@ import java.util.ArrayList;
 						ps3.setDate(6, null);
 					else
 						ps3.setDate(6, new java.sql.Date(fechaN.getTimeInMillis()));
-						
-					if(arg0.getSalario()==null)
+					
+					Double salario=arg0.getSalario();
+					if(salario==null)
 						ps3.setNull(7, Types.DOUBLE);
 					else
-						ps3.setDouble(7, arg0.getSalario());
+						ps3.setDouble(7, salario);
 					
 					ps3.setString(8,arg0.getSucursal().getId() );
 					
@@ -471,8 +472,8 @@ import java.util.ArrayList;
 		public boolean existe(Connection con,String sql,String valorId) throws ExcepcionDeAplicacion{
 			boolean existe=false;
 			try {
-				PreparedStatement ps=con.prepareStatement(sql);
-				ps.setString(1, valorId);;
+				PreparedStatement ps=con.prepareStatement(sql);  
+				ps.setString(1, valorId);
 				ResultSet rs=ps.executeQuery();
 				
 				existe=rs.next();
