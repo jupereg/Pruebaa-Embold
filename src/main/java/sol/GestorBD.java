@@ -58,7 +58,7 @@ import java.util.ArrayList;
 				
 				while(rs.next()) {
 					//nos ayudamos del método creado previamente
-					lista.add(getFinca(rs.getString(1)));//No hace falta el this.
+					lista.add(getFinca(con,rs.getString(1)));//No hace falta el this.
 				}
 				//cerramos conexiones
 				rs.close();
@@ -165,7 +165,7 @@ import java.util.ArrayList;
 					if(d!=null) 					
 						cal.setTime(d);
 					else
-						cal=null;//Está bien??
+						cal=null;
 					empleado=new Empleado(rs1.getString(1),rs1.getString(2),rs1.getString(3),rs1.getString(4),sexoChar,salario,cal,sucursal);
 				}
 				rs1.close();rs2.close();
@@ -246,7 +246,8 @@ import java.util.ArrayList;
 			
 			return finca;
 		}
-
+		
+		
 		@Override
 		public int incrementarSueldo(float arg0) throws ExcepcionDeAplicacion {
 			// TODO Auto-generated method stub
@@ -318,7 +319,7 @@ import java.util.ArrayList;
 					//comprobar nulos para tipos primitivos
 					Character sexo=arg0.getSexo();//para acceder 2 veces mejor lo almacenamos en una variable
 					if(sexo==null)
-						ps3.setNull(5, Types.BOOLEAN);
+						ps3.setNull(5, java.sql.Types.BOOLEAN);
 					else
 						ps3.setString(5, Character.toString(sexo));
 					
@@ -487,6 +488,55 @@ import java.util.ArrayList;
 			}
 			return existe;
 		}
+		
+		//SOBRECARGADO GETFINCA
+		public Finca getFinca(Connection con,String arg0) throws ExcepcionDeAplicacion {
+			// TODO Auto-generated method stub
+			//Lo realizaremos con un JOIN
+			Finca finca=null;
+			Propietario prop=null;
+			try {
+				String s1="SELECT * FROM finca WHERE id_finca=?";
+				String s2="SELECT P.* FROM PROPIETARIO AS P JOIN FINCA AS F ON P.ID_PROPIETARIO=F.PROPIETARIO WHERE id_finca =?";	
+				PreparedStatement pstm = con.prepareStatement(s1);
+				PreparedStatement pstm2=con.prepareStatement(s2);
+				pstm.setString(1, arg0);
+				pstm2.setString(1, arg0);
+				ResultSet rs1=pstm.executeQuery();
+				ResultSet rs2=pstm2.executeQuery();	
+				
+				//Boolean ascB=(asc==null)? null: asc.equalsIgnoreCase("Si")
+				
+				if(rs2.next()) {
+					prop=new Propietario(rs2.getString(1),rs2.getString(2),rs2.getString(3),rs2.getString(4),rs2.getString(5));
+				}			
+				if(rs1.next()) {
+			         boolean hayAscensor;
+			         String ascensor=rs1.getString(9);
+			         hayAscensor=(ascensor==null)? null:ascensor.equalsIgnoreCase("si");
+			         			          
+			         Integer habitaciones = rs1.getInt(6); 
+				  	 if (rs1.wasNull()) habitaciones=null;
+			         Integer banios = rs1.getInt(7);
+			  		 if (rs1.wasNull()) banios=null;
+			  		 Double alquiler = rs1.getDouble(10); 
+			  		 if (rs1.wasNull()) alquiler=null;
+			  		 
+			  		 finca=new Finca(rs1.getString(1),rs1.getString(2),rs1.getString(3),rs1.getString(4),rs1.getString(5),habitaciones,banios,rs1.getString(8),hayAscensor,prop,alquiler);
+			  		
+				}
+				rs1.close();rs2.close();
+				pstm.close();pstm2.close();
+			}
+			catch(SQLException e) {
+				e.printStackTrace();
+				throw new ExcepcionDeAplicacion(e);
+			}
+			
+			
+			return finca;
+		}
+
 		//Ejecutando los 2 métodos de incrementar, en incrementarSueldoUpdatableResultSet(float)
 		//se reduce notablemente el tiempo con respecto a incrementarSueldo(float)
 		//Para comprobarlo he creado una nueva clase principal con un método main
