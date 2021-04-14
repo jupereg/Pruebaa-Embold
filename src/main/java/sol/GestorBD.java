@@ -16,7 +16,8 @@ import java.util.ArrayList;
 	import java.util.List;
 	import java.util.Properties;
 
-	import model.Empleado;
+import model.Captacion;
+import model.Empleado;
 	import model.ExcepcionDeAplicacion;
 	import model.Finca;
 	import model.Propietario;
@@ -549,6 +550,112 @@ import java.util.ArrayList;
 				con=DriverManager.getConnection(URL, USR, PWD);
 				String sql1="INSERT INTO finca VALUES(?,?,?,?,?,?,?,?,?,?,?)";
 				String sql2="INSERT INTO captacion VALUES(?,?,?)";
+				String sql3="INSERT INTO comision VALUES(?,?,?)";
+				con.setAutoCommit(false);
+				PreparedStatement ps1=con.prepareStatement(sql1);
+				PreparedStatement ps2=con.prepareStatement(sql2);
+				PreparedStatement ps3=con.prepareStatement(sql3);
+				
+				ps1.setString(1, finca.getId());
+				ps1.setString(2, finca.getDireccion());
+				ps1.setString(3, finca.getCiudad());
+				ps1.setString(4, finca.getCP());
+				ps1.setString(5, finca.getTipo());
+				Integer habitaciones=finca.getHabitaciones();
+				if(habitaciones==null)
+					ps1.setNull(6, java.sql.Types.INTEGER);
+				else
+					ps1.setInt(6, habitaciones);
+				Integer banios=finca.getBanios();
+				if(banios==null)
+					ps1.setNull(7, java.sql.Types.INTEGER);
+				else
+					ps1.setInt(7, banios);
+				ps1.setString(8,finca.getCalefaccion());
+				Boolean asc=finca.tieneAscensor();
+				if(asc)
+					ps1.setString(9, "si");
+				else
+					ps1.setString(9, "no");
+				Double alquiler=finca.getAlquiler();
+				if(alquiler==null)
+					ps1.setNull(10, Types.DOUBLE);
+				else
+					ps1.setDouble(10, alquiler);
+				
+				if(!existe(con,"select * from propietario where id_propietario=?",finca.getPropietario().getId()))
+					aniadirPropietario(con,finca.getPropietario());
+				
+				ps1.setString(11, finca.getPropietario().getId());
+				
+				
+				ps2.setString(1,finca.getId());
+				ps2.setString(2, idEmpleado);
+				Date fecha=new java.sql.Date(Calendar.getInstance().getTimeInMillis());
+				ps2.setDate(3, fecha);
+				
+				
+				ps3.setString(1, idEmpleado);
+				ps3.setDate(2,fecha);
+				if(finca.getTipo().equalsIgnoreCase("unifamiliar"))
+					ps3.setDouble(3, 5);
+				if(finca.getTipo().equalsIgnoreCase("piso")&&finca.getHabitaciones()>3)
+					ps3.setDouble(3, 5);
+				if(finca.getTipo().equalsIgnoreCase("piso")&&finca.getHabitaciones()<=3)
+					ps3.setDouble(3, 7);
+				
+				ps1.executeUpdate();ps2.executeUpdate();ps3.executeUpdate();
+				ps1.close();ps2.close();ps3.close();
+				con.commit();
+			}
+			catch(SQLException e) {
+				e.printStackTrace();
+				try {
+					if(con!=null)
+						con.rollback();
+					
+				}
+				catch(SQLException ex) {
+					ex.printStackTrace();
+					throw new ExcepcionDeAplicacion(ex);
+				}
+				throw new ExcepcionDeAplicacion(e);
+			}
+			finally {
+				try {
+					if(con!=null)
+						con.close();
+				}
+				catch(SQLException e) {
+					e.printStackTrace();
+					throw new ExcepcionDeAplicacion(e);
+				}
+			}
+		}
+		
+		public static void aniadirPropietario(Connection con,Propietario prop) throws ExcepcionDeAplicacion{
+			try {
+				String sql="INSERT into propietario values(?,?,?,?,?)";
+				PreparedStatement ps=con.prepareStatement(sql);
+				ps.setString(1, prop.getId());
+				ps.setString(2, prop.getNombre());
+				ps.setString(3, prop.getApellidos());
+				ps.setString(4, prop.getDireccion());
+				ps.setString(5, prop.getTelefono());
+				ps.executeUpdate();
+				ps.close();
+			}
+			catch(SQLException e) {
+				e.printStackTrace();
+				throw new ExcepcionDeAplicacion(e);
+			}
+			
+		}
+		
+		public void getPropieterio(String idPropietario)throws ExcepcionDeAplicacion{
+			Connection con=null;
+			try {
+				con=DriverManager.getConnection(URL,USR, PWD);
 				
 			}
 			catch(SQLException e) {
@@ -560,9 +667,9 @@ import java.util.ArrayList;
 					if(con!=null)
 						con.close();
 				}
-				catch(SQLException e) {
-					e.printStackTrace();
-					throw new ExcepcionDeAplicacion(e);
+				catch(SQLException ex) {
+					ex.printStackTrace();
+					throw new ExcepcionDeAplicacion(ex);
 				}
 			}
 		}

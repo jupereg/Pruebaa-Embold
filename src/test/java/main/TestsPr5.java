@@ -303,191 +303,191 @@ public class TestsPr5 extends TestsUtil {
 ///////////////////// Test del ejercicio opcional de la Practica 5 ///////////////////////
 /////////////////////////////////////////////////////////////////////////////////////////////////
 
-//	@Test
-//	public void testAniadirCaptacion1() {
-//		try {
-//			// Creo el objeto de la Finca a captar
-//			Finca f = new Finca("f111", "Jorge Vigon 8", "Zaragoza", "26004", "unifamiliar", new Integer(5),
-//					new Integer(3), "individual", false, gbd.getPropietario("ElGC01"), new Double(1200));
-//			// Invoco al metodo aniadirCaptacion
-//			gbd.aniadirCaptacion(f, "AGar01");
-//			/////////////////////////////
-//			// Compruebo las captaciones//
-//			/////////////////////////////
-//			// Obtengo de la BD el contenido de la tabla Captacion resultante tras aniadir
-//			///////////////////////////// captacion anterior
-//			ITable tablaCaptacionObtenida = getTablaActual(url, user, password, schema, "captacion");
-//			// Cargo los datos de las captaciones esperadas tras aniadir la captacion
-//			// desde el XML captacionesEsperadasAv1.xml
-//			ITable tablaCaptacionEsperada = getTablaEsperada("captacion", "src/captacionesEsperadasAv1.xml");
-//			ReplacementTable tablaCaptacionEsperadaReemplazada = new ReplacementTable(tablaCaptacionEsperada);
-//			SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd");
-//			Date fechaHoy = new Date(System.currentTimeMillis());
-//			tablaCaptacionEsperadaReemplazada.addReplacementObject("[TODAY]", sdf.format(fechaHoy));
-//			// Compruebo que el contenido actual de la tabla Captacion en la BD coincide con
-//			// la informacion esperada cargada del XML
-//			Assertion.assertEquals(tablaCaptacionEsperadaReemplazada, tablaCaptacionObtenida);
-//			/////////////////////////////
-//			// Compruebo las comisiones//
-//			/////////////////////////////
-//			// Obtengo de la BD el contenido de la tabla Comision resultante tras aniadir
-//			// captacion anterior
-//			ITable tablaComisionObtenida = getTablaActual(url, user, password, schema, "comision");
-//			// Cargo los datos de las comisiones esperadas tras aniadir la captacion
-//			// desde el XML comisionesEsperadasAv1.xml
-//			ITable tablaComisionEsperada = getTablaEsperada("comision", "src/comisionesEsperadasAv1.xml");
-//			ReplacementTable tablaComisionEsperadaReemplazada = new ReplacementTable(tablaComisionEsperada);
-//			tablaComisionEsperadaReemplazada.addReplacementObject("[TODAY]", sdf.format(fechaHoy));
-//			// Compruebo que el contenido actual de la tabla Comision en la BD coincide con
-//			// la informacion esperada cargada del XML
-//			Assertion.assertEquals(tablaComisionEsperadaReemplazada, tablaComisionObtenida);
-//			/////////////////////////////
-//			// Compruebo las fincas//
-//			/////////////////////////////
-//			// Obtengo de la BD el contenido de la tabla Finca resultante tras aniadir la
-//			// captacion anterior
-//			ITable tablaFincaObtenida = getTablaActual(url, user, password, schema, "finca");
-//			ReplacementTable tablaFincaObtenidaReemplazada = new ReplacementTable(tablaFincaObtenida);
-//			tablaFincaObtenidaReemplazada.addReplacementObject("[null]", null);
-//			// Cargo los datos de las fincas esperadas tras aniadir la captacion
-//			// desde el XML fincasEsperadasAv1.xml
-//			ITable tablaFincaEsperada = getTablaEsperada("finca", "src/fincasEsperadasAv1.xml");
-//			ReplacementTable tablaFincaEsperadaReemplazada = new ReplacementTable(tablaFincaEsperada);
-//			tablaFincaEsperadaReemplazada.addReplacementObject("[null]", null);
-//			// Compruebo que el contenido actual de la tabla Finca en la BD coincide con
-//			// la informacion esperada cargada del XML
-//			Assertion.assertEquals(tablaFincaEsperadaReemplazada, tablaFincaObtenidaReemplazada);
-//
-//		} catch (DatabaseUnitException e) {
-//			e.printStackTrace();
-//		} catch (ExcepcionDeAplicacion e) {
-//			e.printStackTrace();
-//		}
-//	}
-//
-//	@Test
-//	public void testAniadirCaptacion2() {
-//		try {
-//			// Creo el objeto de la Finca a captar
-//			Finca f = new Finca("f222", "Gran Via 8", "Zaragoza", "26002", "piso", new Integer(2), new Integer(1),
-//					"individual", false, gbd.getPropietario("AnRo01"), new Double(700));
-//			// Invoco al metodo aniadirCaptacion
-//			gbd.aniadirCaptacion(f, "ADom01");
-//			/////////////////////////////
-//			// Compruebo las captaciones//
-//			/////////////////////////////
-//			// Obtengo de la BD el contenido de la tabla Captacion resultante tras aniadir
-//			///////////////////////////// captacion anterior
-//			ITable tablaCaptacionObtenida = getTablaActual(url, user, password, schema, "captacion");
-//			// Cargo los datos de las captaciones esperadas tras aniadir la captacion
-//			// desde el XML captacionesEsperadasAv2.xml
-//			ITable tablaCaptacionEsperada = getTablaEsperada("captacion", "src/captacionesEsperadasAv2.xml");
-//			ReplacementTable tablaCaptacionEsperadaReemplazada = new ReplacementTable(tablaCaptacionEsperada);
-//			SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd");
-//			Date fechaHoy = new Date(System.currentTimeMillis());
-//			tablaCaptacionEsperadaReemplazada.addReplacementObject("[TODAY]", sdf.format(fechaHoy));
-//			// Compruebo que el contenido actual de la tabla Captacion en la BD coincide con
-//			// la informacion esperada cargada del XML
-//			Assertion.assertEquals(tablaCaptacionEsperadaReemplazada, tablaCaptacionObtenida);
-//			/////////////////////////////
-//			// Compruebo las comisiones//
-//			/////////////////////////////
-//			// Obtengo de la BD el contenido de la tabla Comision resultante tras aniadir
-//			// captacion anterior
-//			ITable tablaComisionObtenida = getTablaActual(url, user, password, schema, "comision");
-//			// Cargo los datos de las comisiones esperadas tras aniadir la captacion
-//			// desde el XML comisionesEsperadasAv2.xml
-//			ITable tablaComisionEsperada = getTablaEsperada("comision", "src/comisionesEsperadasAv2.xml");
-//			ReplacementTable tablaComisionEsperadaReemplazada = new ReplacementTable(tablaComisionEsperada);
-//			tablaComisionEsperadaReemplazada.addReplacementObject("[TODAY]", sdf.format(fechaHoy));
-//			// Compruebo que el contenido actual de la tabla Comision en la BD coincide con
-//			// la informacion esperada cargada del XML
-//			Assertion.assertEquals(tablaComisionEsperadaReemplazada, tablaComisionObtenida);
-//			/////////////////////////////
-//			// Compruebo las fincas//
-//			/////////////////////////////
-//			// Obtengo de la BD el contenido de la tabla Finca resultante tras aniadir la
-//			// captacion anterior
-//			ITable tablaFincaObtenida = getTablaActual(url, user, password, schema, "finca");
-//			ReplacementTable tablaFincaObtenidaReemplazada = new ReplacementTable(tablaFincaObtenida);
-//			tablaFincaObtenidaReemplazada.addReplacementObject("[null]", null);
-//			// Cargo los datos de las fincas esperadas tras aniadir la captacion
-//			// desde el XML fincasEsperadasAv2.xml
-//			ITable tablaFincaEsperada = getTablaEsperada("finca", "src/fincasEsperadasAv2.xml");
-//			ReplacementTable tablaFincaEsperadaReemplazada = new ReplacementTable(tablaFincaEsperada);
-//			tablaFincaEsperadaReemplazada.addReplacementObject("[null]", null);
-//			// Compruebo que el contenido actual de la tabla Finca en la BD coincide con
-//			// la informacion esperada cargada del XML
-//			Assertion.assertEquals(tablaFincaEsperadaReemplazada, tablaFincaObtenidaReemplazada);
-//
-//		} catch (DatabaseUnitException e) {
-//			e.printStackTrace();
-//		} catch (ExcepcionDeAplicacion e) {
-//			e.printStackTrace();
-//		}
-//	}
-//
-//	@Test
-//	public void testAniadirCaptacion3() {
-//		try {
-//			// Creo el objeto de la Finca a captar
-//			Finca f = new Finca("f333", "Eliseo Pinedo 1", "Zaragoza", "26004", "piso", new Integer(3), new Integer(1),
-//					"individual", false, new Propietario("P234", "Pedro", "Martinez", "Lardero 7", "343234421"),
-//					new Double(750));
-//			// Invoco al metodo aniadirCaptacion
-//			gbd.aniadirCaptacion(f, "MaAl01");
-//			/////////////////////////////
-//			// Compruebo las captaciones//
-//			/////////////////////////////
-//			// Obtengo de la BD el contenido de la tabla Captacion resultante tras aniadir
-//			///////////////////////////// captacion anterior
-//			ITable tablaCaptacionObtenida = getTablaActual(url, user, password, schema, "captacion");
-//			// Cargo los datos de las captaciones esperadas tras aniadir la captacion
-//			// desde el XML captacionesEsperadasAv3.xml
-//			ITable tablaCaptacionEsperada = getTablaEsperada("captacion", "src/captacionesEsperadasAv3.xml");
-//			ReplacementTable tablaCaptacionEsperadaReemplazada = new ReplacementTable(tablaCaptacionEsperada);
-//			SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd");
-//			Date fechaHoy = new Date(System.currentTimeMillis());
-//			tablaCaptacionEsperadaReemplazada.addReplacementObject("[TODAY]", sdf.format(fechaHoy));
-//			// Compruebo que el contenido actual de la tabla Captacion en la BD coincide con
-//			// la informacion esperada cargada del XML
-//			Assertion.assertEquals(tablaCaptacionEsperadaReemplazada, tablaCaptacionObtenida);
-//			/////////////////////////////
-//			// Compruebo las comisiones//
-//			/////////////////////////////
-//			// Obtengo de la BD el contenido de la tabla Comision resultante tras aniadir
-//			// captacion anterior
-//			ITable tablaComisionObtenida = getTablaActual(url, user, password, schema, "comision");
-//			// Cargo los datos de las comisiones esperadas tras aniadir la captacion
-//			// desde el XML comisionesEsperadasAv3.xml
-//			ITable tablaComisionEsperada = getTablaEsperada("comision", "src/comisionesEsperadasAv3.xml");
-//			ReplacementTable tablaComisionEsperadaReemplazada = new ReplacementTable(tablaComisionEsperada);
-//			tablaComisionEsperadaReemplazada.addReplacementObject("[TODAY]", sdf.format(fechaHoy));
-//			// Compruebo que el contenido actual de la tabla Comision en la BD coincide con
-//			// la informacion esperada cargada del XML
-//			Assertion.assertEquals(tablaComisionEsperadaReemplazada, tablaComisionObtenida);
-//			/////////////////////////////
-//			// Compruebo las fincas//
-//			/////////////////////////////
-//			// Obtengo de la BD el contenido de la tabla Finca resultante tras aniadir la
-//			// captacion anterior
-//			ITable tablaFincaObtenida = getTablaActual(url, user, password, schema, "finca");
-//			ReplacementTable tablaFincaObtenidaReemplazada = new ReplacementTable(tablaFincaObtenida);
-//			tablaFincaObtenidaReemplazada.addReplacementObject("[null]", null);
-//			// Cargo los datos de las fincas esperadas tras aniadir la captacion
-//			// desde el XML fincasEsperadasAv3.xml
-//			ITable tablaFincaEsperada = getTablaEsperada("finca", "src/fincasEsperadasAv3.xml");
-//			ReplacementTable tablaFincaEsperadaReemplazada = new ReplacementTable(tablaFincaEsperada);
-//			tablaFincaEsperadaReemplazada.addReplacementObject("[null]", null);
-//			// Compruebo que el contenido actual de la tabla Finca en la BD coincide con
-//			// la informacion esperada cargada del XML
-//			Assertion.assertEquals(tablaFincaEsperadaReemplazada, tablaFincaObtenidaReemplazada);
-//
-//		} catch (DatabaseUnitException e) {
-//			e.printStackTrace();
-//		} catch (ExcepcionDeAplicacion e) {
-//			e.printStackTrace();
-//		}
-//	}
+	@Test
+	public void testAniadirCaptacion1() {
+		try {
+			// Creo el objeto de la Finca a captar
+			Finca f = new Finca("f111", "Jorge Vigon 8", "Zaragoza", "26004", "unifamiliar", new Integer(5),
+					new Integer(3), "individual", false, gbd.getPropietario("ElGC01"), new Double(1200));
+			// Invoco al metodo aniadirCaptacion
+			gbd.aniadirCaptacion(f, "AGar01");
+			/////////////////////////////
+			// Compruebo las captaciones//
+			/////////////////////////////
+			// Obtengo de la BD el contenido de la tabla Captacion resultante tras aniadir
+			///////////////////////////// captacion anterior
+			ITable tablaCaptacionObtenida = getTablaActual(url, user, password, schema, "captacion");
+			// Cargo los datos de las captaciones esperadas tras aniadir la captacion
+			// desde el XML captacionesEsperadasAv1.xml
+			ITable tablaCaptacionEsperada = getTablaEsperada("captacion", "src/captacionesEsperadasAv1.xml");
+			ReplacementTable tablaCaptacionEsperadaReemplazada = new ReplacementTable(tablaCaptacionEsperada);
+			SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd");
+			Date fechaHoy = new Date(System.currentTimeMillis());
+			tablaCaptacionEsperadaReemplazada.addReplacementObject("[TODAY]", sdf.format(fechaHoy));
+			// Compruebo que el contenido actual de la tabla Captacion en la BD coincide con
+			// la informacion esperada cargada del XML
+			Assertion.assertEquals(tablaCaptacionEsperadaReemplazada, tablaCaptacionObtenida);
+			/////////////////////////////
+			// Compruebo las comisiones//
+			/////////////////////////////
+			// Obtengo de la BD el contenido de la tabla Comision resultante tras aniadir
+			// captacion anterior
+			ITable tablaComisionObtenida = getTablaActual(url, user, password, schema, "comision");
+			// Cargo los datos de las comisiones esperadas tras aniadir la captacion
+			// desde el XML comisionesEsperadasAv1.xml
+			ITable tablaComisionEsperada = getTablaEsperada("comision", "src/comisionesEsperadasAv1.xml");
+			ReplacementTable tablaComisionEsperadaReemplazada = new ReplacementTable(tablaComisionEsperada);
+			tablaComisionEsperadaReemplazada.addReplacementObject("[TODAY]", sdf.format(fechaHoy));
+			// Compruebo que el contenido actual de la tabla Comision en la BD coincide con
+			// la informacion esperada cargada del XML
+			Assertion.assertEquals(tablaComisionEsperadaReemplazada, tablaComisionObtenida);
+			/////////////////////////////
+			// Compruebo las fincas//
+			/////////////////////////////
+			// Obtengo de la BD el contenido de la tabla Finca resultante tras aniadir la
+			// captacion anterior
+			ITable tablaFincaObtenida = getTablaActual(url, user, password, schema, "finca");
+			ReplacementTable tablaFincaObtenidaReemplazada = new ReplacementTable(tablaFincaObtenida);
+			tablaFincaObtenidaReemplazada.addReplacementObject("[null]", null);
+			// Cargo los datos de las fincas esperadas tras aniadir la captacion
+			// desde el XML fincasEsperadasAv1.xml
+			ITable tablaFincaEsperada = getTablaEsperada("finca", "src/fincasEsperadasAv1.xml");
+			ReplacementTable tablaFincaEsperadaReemplazada = new ReplacementTable(tablaFincaEsperada);
+			tablaFincaEsperadaReemplazada.addReplacementObject("[null]", null);
+			// Compruebo que el contenido actual de la tabla Finca en la BD coincide con
+			// la informacion esperada cargada del XML
+			Assertion.assertEquals(tablaFincaEsperadaReemplazada, tablaFincaObtenidaReemplazada);
+
+		} catch (DatabaseUnitException e) {
+			e.printStackTrace();
+		} catch (ExcepcionDeAplicacion e) {
+			e.printStackTrace();
+		}
+	}
+
+	@Test
+	public void testAniadirCaptacion2() {
+		try {
+			// Creo el objeto de la Finca a captar
+			Finca f = new Finca("f222", "Gran Via 8", "Zaragoza", "26002", "piso", new Integer(2), new Integer(1),
+					"individual", false, gbd.getPropietario("AnRo01"), new Double(700));
+			// Invoco al metodo aniadirCaptacion
+			gbd.aniadirCaptacion(f, "ADom01");
+			/////////////////////////////
+			// Compruebo las captaciones//
+			/////////////////////////////
+			// Obtengo de la BD el contenido de la tabla Captacion resultante tras aniadir
+			///////////////////////////// captacion anterior
+			ITable tablaCaptacionObtenida = getTablaActual(url, user, password, schema, "captacion");
+			// Cargo los datos de las captaciones esperadas tras aniadir la captacion
+			// desde el XML captacionesEsperadasAv2.xml
+			ITable tablaCaptacionEsperada = getTablaEsperada("captacion", "src/captacionesEsperadasAv2.xml");
+			ReplacementTable tablaCaptacionEsperadaReemplazada = new ReplacementTable(tablaCaptacionEsperada);
+			SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd");
+			Date fechaHoy = new Date(System.currentTimeMillis());
+			tablaCaptacionEsperadaReemplazada.addReplacementObject("[TODAY]", sdf.format(fechaHoy));
+			// Compruebo que el contenido actual de la tabla Captacion en la BD coincide con
+			// la informacion esperada cargada del XML
+			Assertion.assertEquals(tablaCaptacionEsperadaReemplazada, tablaCaptacionObtenida);
+			/////////////////////////////
+			// Compruebo las comisiones//
+			/////////////////////////////
+			// Obtengo de la BD el contenido de la tabla Comision resultante tras aniadir
+			// captacion anterior
+			ITable tablaComisionObtenida = getTablaActual(url, user, password, schema, "comision");
+			// Cargo los datos de las comisiones esperadas tras aniadir la captacion
+			// desde el XML comisionesEsperadasAv2.xml
+			ITable tablaComisionEsperada = getTablaEsperada("comision", "src/comisionesEsperadasAv2.xml");
+			ReplacementTable tablaComisionEsperadaReemplazada = new ReplacementTable(tablaComisionEsperada);
+			tablaComisionEsperadaReemplazada.addReplacementObject("[TODAY]", sdf.format(fechaHoy));
+			// Compruebo que el contenido actual de la tabla Comision en la BD coincide con
+			// la informacion esperada cargada del XML
+			Assertion.assertEquals(tablaComisionEsperadaReemplazada, tablaComisionObtenida);
+			/////////////////////////////
+			// Compruebo las fincas//
+			/////////////////////////////
+			// Obtengo de la BD el contenido de la tabla Finca resultante tras aniadir la
+			// captacion anterior
+			ITable tablaFincaObtenida = getTablaActual(url, user, password, schema, "finca");
+			ReplacementTable tablaFincaObtenidaReemplazada = new ReplacementTable(tablaFincaObtenida);
+			tablaFincaObtenidaReemplazada.addReplacementObject("[null]", null);
+			// Cargo los datos de las fincas esperadas tras aniadir la captacion
+			// desde el XML fincasEsperadasAv2.xml
+			ITable tablaFincaEsperada = getTablaEsperada("finca", "src/fincasEsperadasAv2.xml");
+			ReplacementTable tablaFincaEsperadaReemplazada = new ReplacementTable(tablaFincaEsperada);
+			tablaFincaEsperadaReemplazada.addReplacementObject("[null]", null);
+			// Compruebo que el contenido actual de la tabla Finca en la BD coincide con
+			// la informacion esperada cargada del XML
+			Assertion.assertEquals(tablaFincaEsperadaReemplazada, tablaFincaObtenidaReemplazada);
+
+		} catch (DatabaseUnitException e) {
+			e.printStackTrace();
+		} catch (ExcepcionDeAplicacion e) {
+			e.printStackTrace();
+		}
+	}
+
+	@Test
+	public void testAniadirCaptacion3() {
+		try {
+			// Creo el objeto de la Finca a captar
+			Finca f = new Finca("f333", "Eliseo Pinedo 1", "Zaragoza", "26004", "piso", new Integer(3), new Integer(1),
+					"individual", false, new Propietario("P234", "Pedro", "Martinez", "Lardero 7", "343234421"),
+					new Double(750));
+			// Invoco al metodo aniadirCaptacion
+			gbd.aniadirCaptacion(f, "MaAl01");
+			/////////////////////////////
+			// Compruebo las captaciones//
+			/////////////////////////////
+			// Obtengo de la BD el contenido de la tabla Captacion resultante tras aniadir
+			///////////////////////////// captacion anterior
+			ITable tablaCaptacionObtenida = getTablaActual(url, user, password, schema, "captacion");
+			// Cargo los datos de las captaciones esperadas tras aniadir la captacion
+			// desde el XML captacionesEsperadasAv3.xml
+			ITable tablaCaptacionEsperada = getTablaEsperada("captacion", "src/captacionesEsperadasAv3.xml");
+			ReplacementTable tablaCaptacionEsperadaReemplazada = new ReplacementTable(tablaCaptacionEsperada);
+			SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd");
+			Date fechaHoy = new Date(System.currentTimeMillis());
+			tablaCaptacionEsperadaReemplazada.addReplacementObject("[TODAY]", sdf.format(fechaHoy));
+			// Compruebo que el contenido actual de la tabla Captacion en la BD coincide con
+			// la informacion esperada cargada del XML
+			Assertion.assertEquals(tablaCaptacionEsperadaReemplazada, tablaCaptacionObtenida);
+			/////////////////////////////
+			// Compruebo las comisiones//
+			/////////////////////////////
+			// Obtengo de la BD el contenido de la tabla Comision resultante tras aniadir
+			// captacion anterior
+			ITable tablaComisionObtenida = getTablaActual(url, user, password, schema, "comision");
+			// Cargo los datos de las comisiones esperadas tras aniadir la captacion
+			// desde el XML comisionesEsperadasAv3.xml
+			ITable tablaComisionEsperada = getTablaEsperada("comision", "src/comisionesEsperadasAv3.xml");
+			ReplacementTable tablaComisionEsperadaReemplazada = new ReplacementTable(tablaComisionEsperada);
+			tablaComisionEsperadaReemplazada.addReplacementObject("[TODAY]", sdf.format(fechaHoy));
+			// Compruebo que el contenido actual de la tabla Comision en la BD coincide con
+			// la informacion esperada cargada del XML
+			Assertion.assertEquals(tablaComisionEsperadaReemplazada, tablaComisionObtenida);
+			/////////////////////////////
+			// Compruebo las fincas//
+			/////////////////////////////
+			// Obtengo de la BD el contenido de la tabla Finca resultante tras aniadir la
+			// captacion anterior
+			ITable tablaFincaObtenida = getTablaActual(url, user, password, schema, "finca");
+			ReplacementTable tablaFincaObtenidaReemplazada = new ReplacementTable(tablaFincaObtenida);
+			tablaFincaObtenidaReemplazada.addReplacementObject("[null]", null);
+			// Cargo los datos de las fincas esperadas tras aniadir la captacion
+			// desde el XML fincasEsperadasAv3.xml
+			ITable tablaFincaEsperada = getTablaEsperada("finca", "src/fincasEsperadasAv3.xml");
+			ReplacementTable tablaFincaEsperadaReemplazada = new ReplacementTable(tablaFincaEsperada);
+			tablaFincaEsperadaReemplazada.addReplacementObject("[null]", null);
+			// Compruebo que el contenido actual de la tabla Finca en la BD coincide con
+			// la informacion esperada cargada del XML
+			Assertion.assertEquals(tablaFincaEsperadaReemplazada, tablaFincaObtenidaReemplazada);
+
+		} catch (DatabaseUnitException e) {
+			e.printStackTrace();
+		} catch (ExcepcionDeAplicacion e) {
+			e.printStackTrace();
+		}
+	}
 
 }
