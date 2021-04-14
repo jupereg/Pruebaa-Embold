@@ -537,9 +537,34 @@ import java.util.ArrayList;
 			return finca;
 		}
 
-		//Ejecutando los 2 métodos de incrementar, en incrementarSueldoUpdatableResultSet(float)
-		//se reduce notablemente el tiempo con respecto a incrementarSueldo(float)
+		//Ejecutando los 2 métodos de incrementar, en incrementarSueldo(float)
+		//se reduce notablemente el tiempo con respecto a incrementarSueldoUpdatableResultSet(float)
 		//Para comprobarlo he creado una nueva clase principal con un método main
-
+		
+		//EJERCICIO OPCIONAL
+		public void aniadirCaptacion(Finca finca,String idEmpleado)throws ExcepcionDeAplicacion{
+			Captacion cap=null;
+			Connection con=null;
+			try {
+				con=DriverManager.getConnection(URL, USR, PWD);
+				String sql1="INSERT INTO finca VALUES(?,?,?,?,?,?,?,?,?,?,?)";
+				String sql2="INSERT INTO captacion VALUES(?,?,?)";
+				
+			}
+			catch(SQLException e) {
+				e.printStackTrace();
+				throw new ExcepcionDeAplicacion(e);
+			}
+			finally {
+				try {
+					if(con!=null)
+						con.close();
+				}
+				catch(SQLException e) {
+					e.printStackTrace();
+					throw new ExcepcionDeAplicacion(e);
+				}
+			}
+		}
 }
 
