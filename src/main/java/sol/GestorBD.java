@@ -585,7 +585,7 @@ import model.Empleado;
 				
 				String idPropietario=finca.getPropietario().getId();
 				if(!existe(con,"select * from propietario where id_propietario=?",idPropietario))
-					aniadirPropietario(con,finca.getPropietario());
+					this.aniadirPropietario(con,finca.getPropietario());
 				
 				ps1.setString(11, idPropietario);
 				
@@ -634,7 +634,7 @@ import model.Empleado;
 			}
 		}
 		
-		public static void aniadirPropietario(Connection con,Propietario prop) throws ExcepcionDeAplicacion{
+		public void aniadirPropietario(Connection con,Propietario prop) throws ExcepcionDeAplicacion{
 			try {
 				String sql="INSERT into propietario values(?,?,?,?,?)";
 				PreparedStatement ps=con.prepareStatement(sql);
