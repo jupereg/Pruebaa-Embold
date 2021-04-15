@@ -157,7 +157,7 @@ import model.Empleado;
 				if(rs1.next()) {
 					String sexo=rs1.getString(5);
 					char sexoChar=(sexo==null)? null:sexo.charAt(0);
-					
+					//Character sexoChar=sexo.charAt(0);
 					Double salario=rs1.getDouble(7);
 					if(rs1.wasNull()) salario=null;
 							
