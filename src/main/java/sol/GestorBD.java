@@ -583,10 +583,11 @@ import model.Empleado;
 				else
 					ps1.setDouble(10, alquiler);
 				
-				if(!existe(con,"select * from propietario where id_propietario=?",finca.getPropietario().getId()))
+				String idPropietario=finca.getPropietario().getId();
+				if(!existe(con,"select * from propietario where id_propietario=?",idPropietario))
 					aniadirPropietario(con,finca.getPropietario());
 				
-				ps1.setString(11, finca.getPropietario().getId());
+				ps1.setString(11, idPropietario);
 				
 				
 				ps2.setString(1,finca.getId());
@@ -652,11 +653,20 @@ import model.Empleado;
 			
 		}
 		
-		public void getPropieterio(String idPropietario)throws ExcepcionDeAplicacion{
+		public Propietario getPropietario(String idPropietario)throws ExcepcionDeAplicacion{
 			Connection con=null;
+			Propietario prop=null;
 			try {
 				con=DriverManager.getConnection(URL,USR, PWD);
-				
+				String sql="select * from propietario where id_propietario=?";
+				PreparedStatement ps=con.prepareStatement(sql);
+				ps.setString(1, idPropietario);
+				ResultSet rs=ps.executeQuery();
+				if(rs.next()) {
+					prop=new Propietario(rs.getString(1),rs.getString(2),rs.getString(3),rs.getString(4),rs.getString(5));
+				}
+				rs.close();
+				ps.close();
 			}
 			catch(SQLException e) {
 				e.printStackTrace();
@@ -672,6 +682,7 @@ import model.Empleado;
 					throw new ExcepcionDeAplicacion(ex);
 				}
 			}
+			return prop;
 		}
 }
 
